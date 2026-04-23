@@ -46,35 +46,36 @@ export function Controls() {
     <>
       <ControlButton
         pos={controls.spawn}
-        mask="/masks/circle.svg"
-        texture="/textures/snail-0.svg"
+        mask="/masks/circle.jpg"
+        texture="/textures/snail-0.jpg"
         onClick={nextSnail}
       />
 
       <ControlButton
         pos={controls.download}
-        mask="/masks/arrow-down.svg"
-        texture="/textures/snail-1.svg"
+        mask="/masks/arrow-down.jpg"
+        texture="/textures/snail-1.jpg"
         onClick={() => {
           if (!current) return
           const a = document.createElement('a')
           a.href = `/api/dl?url=${encodeURIComponent(current.src)}`
-          a.download = `snail-${current.id}.svg`
+          const ext = current.src.split('.').pop()?.split('?')[0] ?? 'jpg'
+          a.download = `snail-${current.id}.${ext}`
           a.click()
         }}
       />
 
       <ControlButton
         pos={controls.batch}
-        mask="/masks/grid.svg"
-        texture="/textures/snail-2.svg"
+        mask="/masks/grid.jpg"
+        texture="/textures/snail-2.jpg"
         onClick={() => { if (current) addToPocket(current) }}
       />
 
       <ControlButton
         pos={controls.filter}
-        mask="/masks/warp.svg"
-        texture="/textures/snail-3.svg"
+        mask="/masks/warp.jpg"
+        texture="/textures/snail-3.jpg"
         onClick={() => setMode(mode === 'filter' ? 'browse' : 'filter')}
       />
     </>

@@ -1,4 +1,4 @@
-import { crawlDDG } from './ddg'
+import { crawlAvito } from './avito'
 import { crawlPexels } from './pexels'
 import { crawlWikimedia, downloadWikimediaTextures } from './wikimedia'
 import { crawlINaturalist } from './inaturalist'
@@ -17,25 +17,28 @@ async function run() {
   mkdirSync(OUTPUT_DIR, { recursive: true })
   mkdirSync(TEXTURES_DIR, { recursive: true })
 
-  // 1. Качаем текстуры для UI (реальные фото улиток)
+  // 1. Текстуры для UI из Wikimedia (реальные фото, работают с любого IP)
   console.log('--- [1/4] Скачиваю UI текстуры (Wikimedia) ---')
   const textures = await downloadWikimediaTextures(TEXTURES_DIR, 20)
   console.log(`Текстуры: ${textures.length}/20\n`)
 
-  // 2. Параллельно собираем все источники
-  console.log('--- [2/4] Краулю все источники параллельно ---')
-  const [ddgRaw, wikiRaw, inatRaw, pexelsRaw] = await Promise.all([
-    crawlDDG(),
+  // 2. Авито — основной источник (нужен домашний IP/VPN)
+  //    Wikimedia + iNaturalist — резервные (работают с любого IP)
+  console.log('--- [2/4] Краулю источники ---')
+  console.log('[!] Авито требует домашний IP или VPN — если блокирует, запускайте локально\n')
+
+  const [avitoRaw, wikiRaw, inatRaw, pexelsRaw] = await Promise.all([
+    crawlAvito(400),
     crawlWikimedia(),
-    crawlINaturalist(400),
+    crawlINaturalist(200),
     crawlPexels(),
   ])
-  console.log(`\nСырых: DDG=${ddgRaw.length}, Wiki=${wikiRaw.length}, iNat=${inatRaw.length}, Pexels=${pexelsRaw.length}`)
+  console.log(`\nСырых: Avito=${avitoRaw.length}, Wiki=${wikiRaw.length}, iNat=${inatRaw.length}, Pexels=${pexelsRaw.length}`)
 
-  // 3. Нормализация
+  // 3. Нормализация — Авито идёт первым (приоритет)
   console.log('\n--- [3/4] Нормализую ---')
   const allItems: SnailItem[] = [
-    ...ddgRaw.map(r => normalize(r)),
+    ...avitoRaw.map(r => normalize(r)),
     ...wikiRaw.map(r => normalize(r)),
     ...inatRaw.map(r => normalize(r)),
     ...pexelsRaw.map(r => ({ ...normalize(r), type: 'video' as const })),

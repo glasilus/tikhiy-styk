@@ -155,8 +155,8 @@ export async function downloadWikimediaTextures(destDir: string, count = 20): Pr
 
   for (let i = 0; i < selected.length; i++) {
     const img = selected[i]
-    const ext = img.url.match(/\.(jpe?g|png)$/i)?.[1] ?? 'jpg'
-    const dest = join(destDir, `snail-${i}.${ext}`)
+    // Всегда сохраняем как .jpg — компоненты ссылаются на фиксированное расширение
+    const dest = join(destDir, `snail-${i}.jpg`)
 
     try {
       await new Promise<void>((resolve, reject) => {
@@ -187,7 +187,7 @@ export async function downloadWikimediaTextures(destDir: string, count = 20): Pr
         req.on('error', reject)
         req.setTimeout(20000, () => { req.destroy(); reject(new Error('timeout')) })
       })
-      console.log(`[Wiki] Скачано: snail-${i}.${ext}`)
+      console.log(`[Wiki] Скачано: snail-${i}.jpg`)
       downloaded.push(dest)
     } catch (e) {
       console.error(`[Wiki] Не скачалось snail-${i}:`, e)

@@ -25,7 +25,7 @@ export function FilterPanel() {
         className="bg-transparent border-b border-white/30 text-white/80 text-center
                    outline-none w-40 pb-1 text-sm placeholder:text-white/20"
         style={{
-          backgroundImage: 'url(/textures/snail-4.svg)',
+          backgroundImage: 'url(/textures/snail-4.jpg)',
           WebkitBackgroundClip: 'text',
           backgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
@@ -39,7 +39,7 @@ export function FilterPanel() {
             onClick={() => setVibeFilter(v)}
             className="w-8 h-8 rounded-sm active:scale-90 transition-transform"
             style={{
-              backgroundImage: `url(/textures/snail-${VIBES.indexOf(v) + 5}.svg)`,
+              backgroundImage: `url(/textures/snail-${VIBES.indexOf(v) + 5}.jpg)`,
               backgroundSize: 'cover',
               opacity: vibeFilter === v ? 1 : 0.35,
               outline: vibeFilter === v ? '1px solid rgba(255,255,255,0.5)' : 'none',

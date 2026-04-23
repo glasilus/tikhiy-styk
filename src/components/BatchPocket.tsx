@@ -15,7 +15,8 @@ export function BatchPocket() {
         const res = await fetch(`/api/dl?url=${encodeURIComponent(pocket[i].src)}`)
         if (!res.ok) continue
         const blob = await res.blob()
-        zip.file(`snail-${i + 1}-${pocket[i].id.slice(0, 8)}.svg`, blob)
+        const ext = pocket[i].src.split('.').pop()?.split('?')[0] ?? 'jpg'
+        zip.file(`snail-${i + 1}-${pocket[i].id.slice(0, 8)}.${ext}`, blob)
       } catch { /* пропускаем нескачанные */ }
     }
     const content = await zip.generateAsync({ type: 'blob' })
@@ -42,7 +43,7 @@ export function BatchPocket() {
         onClick={downloadAll}
         className="w-8 h-8 rounded-sm"
         style={{
-          backgroundImage: 'url(/textures/snail-0.svg)',
+          backgroundImage: 'url(/textures/snail-0.jpg)',
           backgroundSize: 'cover',
           WebkitMaskImage: 'url(/masks/arrow-down.svg)',
           maskImage: 'url(/masks/arrow-down.svg)',

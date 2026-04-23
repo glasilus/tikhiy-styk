@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const ALLOWED_HOSTS = ['avito.st', 'pexels.com', 'images.pexels.com']
+const ALLOWED_HOSTS = [
+  'avito.st',           // Авито CDN (img.avito.st, NN.img.avito.st)
+  'pexels.com',
+  'images.pexels.com',
+  'upload.wikimedia.org', // Wikimedia Commons
+  'inaturalist.org',    // iNaturalist CDN
+]
 
 function isAllowed(url: string): boolean {
   try {
