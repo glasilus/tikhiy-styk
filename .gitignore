@@ -1,0 +1,23 @@
+node_modules/
+.next/
+.env.local
+.env.*.local
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+AGENTS.md
+CLAUDE.md
+cl.md
+.claude/
+.superpowers/
+docs/
