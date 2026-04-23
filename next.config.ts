@@ -13,9 +13,10 @@ const config: NextConfig = {
   },
   turbopack: {
     rules: {
-      '*.glsl': { type: 'raw' },
-      '*.vert.glsl': { type: 'raw' },
-      '*.frag.glsl': { type: 'raw' },
+      '*.glsl': {
+        loaders: ['raw-loader'],
+        as: '*.js',
+      },
     },
   },
 }

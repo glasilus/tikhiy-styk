@@ -32,7 +32,7 @@ export function WebGLCanvas() {
     stateRef.current.glitchIntensity = 1.0
 
     const loader = new THREE.TextureLoader()
-    loader.load(current.src, (tex) => {
+    loader.load(`/api/dl?url=${encodeURIComponent(current.src)}`, (tex) => {
       const old = textureRef.current
       textureRef.current = tex
       old?.dispose()
@@ -69,7 +69,7 @@ export function WebGLCanvas() {
         state.sortProgress = Math.min(1, state.sortProgress + dt * 0.15)
       }
 
-      if (textureRef.current && orc.hasActiveEffects(state)) {
+      if (textureRef.current) {
         orc.render(textureRef.current, state, dt)
       }
 

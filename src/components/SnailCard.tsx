@@ -1,6 +1,9 @@
 'use client'
-import Image from 'next/image'
 import { useSnailStore } from '@/store'
+
+function proxySrc(src: string) {
+  return `/api/dl?url=${encodeURIComponent(src)}`
+}
 
 export function SnailCard() {
   const current = useSnailStore(s => s.current)
@@ -22,17 +25,16 @@ export function SnailCard() {
       }}
     >
       {current.type === 'image' ? (
-        <Image
-          src={current.src}
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={proxySrc(current.src)}
           alt=""
-          fill
-          className="object-cover"
-          priority
-          unoptimized={false}
+          className="w-full h-full object-cover"
+          draggable={false}
         />
       ) : (
         <video
-          src={current.src}
+          src={proxySrc(current.src)}
           className="w-full h-full object-cover"
           muted
           playsInline

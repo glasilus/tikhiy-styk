@@ -12,8 +12,9 @@ function ControlButton({
 }) {
   return (
     <button
-      onClick={onClick}
-      className="fixed z-30 w-12 h-12 active:scale-90 transition-transform"
+      onClick={e => { e.stopPropagation(); onClick() }}
+      onMouseDown={e => e.stopPropagation()}
+      className="fixed z-30 w-14 h-14 active:scale-90 transition-all hover:brightness-125"
       style={{
         left: pos.x,
         top: pos.y,
@@ -26,6 +27,7 @@ function ControlButton({
         maskSize: 'contain',
         WebkitMaskRepeat: 'no-repeat',
         maskRepeat: 'no-repeat',
+        filter: 'drop-shadow(0 0 6px rgba(255,255,255,0.45))',
       }}
     />
   )
@@ -46,14 +48,14 @@ export function Controls() {
     <>
       <ControlButton
         pos={controls.spawn}
-        mask="/masks/circle.jpg"
+        mask="/masks/circle.svg"
         texture="/textures/snail-0.jpg"
         onClick={nextSnail}
       />
 
       <ControlButton
         pos={controls.download}
-        mask="/masks/arrow-down.jpg"
+        mask="/masks/arrow-down.svg"
         texture="/textures/snail-1.jpg"
         onClick={() => {
           if (!current) return
@@ -67,14 +69,14 @@ export function Controls() {
 
       <ControlButton
         pos={controls.batch}
-        mask="/masks/grid.jpg"
+        mask="/masks/grid.svg"
         texture="/textures/snail-2.jpg"
         onClick={() => { if (current) addToPocket(current) }}
       />
 
       <ControlButton
         pos={controls.filter}
-        mask="/masks/warp.jpg"
+        mask="/masks/warp.svg"
         texture="/textures/snail-3.jpg"
         onClick={() => setMode(mode === 'filter' ? 'browse' : 'filter')}
       />

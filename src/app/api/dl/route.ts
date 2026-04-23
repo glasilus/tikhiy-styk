@@ -38,7 +38,6 @@ export async function GET(req: NextRequest) {
     return new NextResponse(body, {
       headers: {
         'Content-Type': contentType,
-        'Content-Disposition': 'attachment',
         'Cache-Control': 'public, max-age=31536000, immutable',
       },
     })

@@ -14,19 +14,16 @@ html, body {
   height: 100%;
   overflow: hidden;
   background: #0a0a0a;
-  cursor: url('/cursor/snail.svg') 8 8, auto;
+  cursor: none;
 }
 
-body::before {
-  content: '';
+#snail-cursor {
   position: fixed;
-  inset: 0;
-  background-image: url('/textures/snail-0.svg');
-  background-size: 120px 90px;
-  opacity: 0.07;
-  animation: bgDrift 30s linear infinite;
   pointer-events: none;
-  z-index: 0;
+  z-index: 9999;
+  width: 28px;
+  height: 28px;
+  transform: translate(-50%, -50%);
 }
 
 @keyframes bgDrift {

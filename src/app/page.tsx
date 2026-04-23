@@ -9,6 +9,7 @@ import { Controls } from '@/components/Controls'
 import { FilterPanel } from '@/components/FilterPanel'
 import { BatchPocket } from '@/components/BatchPocket'
 import { WebGLCanvas } from '@/components/WebGLCanvas'
+import { SnailCursor } from '@/components/SnailCursor'
 import type { SnailItem } from '@/lib/types'
 
 export default function Home() {
@@ -22,6 +23,8 @@ export default function Home() {
   const engineRef = useRef<SnailEngine | null>(null)
   const poolRef = useRef<SnailItem[]>([])
   const flowIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const holdTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const isFlowingRef = useRef(false)
 
   useEffect(() => {
     const fp = getBrowserFingerprint()
@@ -62,7 +65,10 @@ export default function Home() {
   }, [seed])
 
   useEffect(() => {
-    return () => { if (flowIntervalRef.current) clearInterval(flowIntervalRef.current) }
+    return () => {
+      if (flowIntervalRef.current) clearInterval(flowIntervalRef.current)
+      if (holdTimerRef.current) clearTimeout(holdTimerRef.current)
+    }
   }, [])
 
   function handleSpawn() {
@@ -73,16 +79,20 @@ export default function Home() {
   }
 
   function startFlow() {
+    isFlowingRef.current = true
     setMode('flow')
     flowIntervalRef.current = setInterval(() => {
       if (!engineRef.current) return
       const next = engineRef.current.pick()
+      if (vibeFilter !== 'all' && next.vibe !== vibeFilter) return
       enqueue([next])
       nextSnail()
     }, 400)
   }
 
   function stopFlow() {
+    if (!isFlowingRef.current) return
+    isFlowingRef.current = false
     setMode('browse')
     if (flowIntervalRef.current) {
       clearInterval(flowIntervalRef.current)
@@ -90,16 +100,36 @@ export default function Home() {
     }
   }
 
+  function handleMouseDown() {
+    holdTimerRef.current = setTimeout(startFlow, 350)
+  }
+
+  function handleMouseUp() {
+    if (holdTimerRef.current) {
+      clearTimeout(holdTimerRef.current)
+      holdTimerRef.current = null
+    }
+    stopFlow()
+  }
+
+  function handleClick(e: React.MouseEvent) {
+    if (isFlowingRef.current) return
+    // Не стреляем по кнопкам управления
+    if ((e.target as HTMLElement).tagName === 'BUTTON') return
+    handleSpawn()
+  }
+
   return (
     <main
       className="w-full h-full relative"
-      onClick={handleSpawn}
-      onMouseDown={startFlow}
-      onMouseUp={stopFlow}
-      onMouseLeave={stopFlow}
+      onClick={handleClick}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
     >
       <WebGLCanvas />
       <SnailCard />
+      <SnailCursor />
       <Controls />
       <FilterPanel />
       <BatchPocket />
